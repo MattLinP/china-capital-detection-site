@@ -5,22 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>China Capital Detection</title>
 <style>
-  :root { color-scheme: light dark; }
+  :root { color-scheme: light dark; --textStrong: #222; --textMeta: #6b6b6b; --link: #1565c0; --background: #fff; --screen: #f2f2f2; --rule: #ddd; }
+  @media (prefers-color-scheme: dark) { :root { --textStrong: #e6e6e6; --textMeta: #a0a0a0; --link: #64b5f6; --background: #121212; --screen: #010101; --rule: #3a3a3a; } }
   body {
-    margin: 0 auto; padding: 2rem 1.25rem 4rem; max-width: 42rem;
+    margin: 0 auto; padding: 0 1rem 4rem; max-width: 42rem;
     font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
-    line-height: 1.75; color: #222; background: #fff;
+    font-size: 0.9375rem; line-height: 1.533;
+    color: var(--textStrong); background: var(--screen);
   }
-  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #121212; } }
-  h1 { font-size: 1.6rem; margin-bottom: .25rem; }
-  h2 { font-size: 1.05rem; margin: 2rem 0 .5rem; }
+  a { color: var(--link); }
+  header {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem;
+    margin: 0 -1rem 2rem; padding: .75rem 1rem; background: var(--background); border-bottom: 1px solid var(--rule);
+  }
+  header a { text-decoration: none; }
+  header a[aria-current] { color: var(--textStrong); }
+  .site { font-size: 1.0625rem; font-weight: 700; color: var(--textStrong); }
+  nav { display: flex; gap: 1rem; font-size: 0.875rem; }
+  h1 { font-size: 1.5rem; line-height: normal; margin: 0 0 .25rem; }
+  h2 { font-size: 1.0625rem; margin: 2rem 0 .5rem; }
   p { margin: 0; }
   ul { margin: .5rem 0 0; padding-left: 1.25rem; }
-  .meta { color: #6b6b6b; font-size: .85rem; margin: 0 0 2rem; }
-  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: .9rem; color: #6b6b6b; }
+  .meta { color: var(--textMeta); font-size: 0.8125rem; margin: 0 0 2rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 0.875rem; color: var(--textMeta); }
 </style>
 </head>
 <body>
+  <header>
+    <a class="site" href="./" aria-current="page">China Capital Detection</a>
+    <nav><a href="./privacy/">隱私權政策</a> <a href="./terms/">服務條款</a></nav>
+  </header>
   <h1>China Capital Detection</h1>
   <p class="meta">最後更新: 2026-10-21</p>
   <p>本 App 以公開的官方資料，為產品標示上的廠商提供「中資背景指標」。結果是附出處的指標，並非法律或事實上的定論。</p>
