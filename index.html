@@ -5,81 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>China Capital Detection</title>
 <style>
-  :root { color-scheme: light dark; --textStrong: #222; --textMeta: #6b6b6b; --link: #1565c0; --background: #fff; --screen: #f2f2f2; --rule: #ddd; }
-  @media (prefers-color-scheme: dark) { :root { --textStrong: #e6e6e6; --textMeta: #a0a0a0; --link: #64b5f6; --background: #121212; --screen: #010101; --rule: #3a3a3a; } }
+  :root { color-scheme: light dark; --paper: #fff8f4; --sheet: #ffffff; --ink: #211d1d; --muted: #5c514d; --link: #ad4d2a; --accent: #db6a41; --rule: #db6a4147; --shadow: #e6b881; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #1b1817; --sheet: #242020; --ink: #f3ece9; --muted: #b9aca7; --link: #f0a07a; --accent: #db6a41; --rule: #db6a4159; --shadow: #6b3a26; } }
+  * { box-sizing: border-box; }
   body {
-    margin: 0 auto; padding: 0 1rem 4rem; max-width: 42rem;
-    font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
-    font-size: 0.9375rem; line-height: 1.533;
-    color: var(--textStrong); background: var(--screen);
+    margin: 0; border-top: 8px solid var(--accent); background: var(--paper); color: var(--ink);
+    font-family: "PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    font-size: 0.9375rem; line-height: 1.733;
   }
-  a { color: var(--link); }
+  a { color: var(--link); text-underline-offset: .2em; }
+  h1, h2 { font-family: "Songti TC", "Noto Serif CJK TC", "Noto Serif TC", "Source Han Serif TC", PMingLiU, serif; }
+  .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .page { max-width: 46rem; margin: 0 auto; padding: 0 1rem 3rem; }
+  .page.wide { max-width: 68rem; }
+  @media (min-width: 48rem) { .page { padding-inline: 2rem; } }
   header {
     display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem;
-    margin: 0 -1rem 2rem; padding: .75rem 1rem; background: var(--background); border-bottom: 1px solid var(--rule);
+    padding: 1rem 0 .75rem; font-size: 0.875rem;
   }
-  header a { text-decoration: none; }
-  header a[aria-current] { color: var(--textStrong); }
-  .site { font-size: 1.0625rem; font-weight: 700; color: var(--textStrong); }
-  nav { display: flex; gap: 1rem; font-size: 0.875rem; }
-  h1 { font-size: 1.5rem; line-height: normal; margin: 0 0 .25rem; }
-  h2 { font-size: 1.0625rem; margin: 2rem 0 .5rem; }
-  p { margin: 0; }
-  ul { margin: .5rem 0 0; padding-left: 1.25rem; }
-  .meta { color: var(--textMeta); font-size: 0.8125rem; margin: 0 0 2rem; }
-  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-size: 0.875rem; color: var(--textMeta); }
+  header a { color: var(--ink); text-decoration: none; }
+  header a:hover { text-decoration: underline; }
+  .site { font-weight: 700; }
+  header nav { display: flex; gap: 1.25rem; }
+  h1 {
+    margin: 2rem 0 0; font-weight: 900; letter-spacing: -.02em;
+    font-size: clamp(2rem, 7vw, 3rem);
+    line-height: 1.125;
+  }
+  .dateline { margin: 1rem 0 0; padding: .4rem 0; border-block: 1px solid var(--ink); font-size: 0.8125rem; }
+  .purpose {
+    margin: 2rem 0 0; padding: 1.25rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--shadow);
+    font-size: clamp(1.0625rem, 2.6vw, 1.25rem);
+    line-height: 1.700;
+  }
+  .intro { margin-top: 2rem; }
+  .toc { margin-top: 2.5rem; }
+  .toc ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .toc li { border-bottom: 1px solid var(--rule); }
+  .toc a { display: flex; gap: 1rem; padding: .55rem 0; color: var(--ink); text-decoration: none; }
+  .toc a:hover span:last-child { text-decoration: underline; }
+  .num { color: var(--link); }
+  @media (min-width: 60rem) {
+    .cols { display: grid; grid-template-columns: 14rem minmax(0, 44rem); gap: 3rem; }
+    .toc { position: sticky; top: 1rem; align-self: start; margin-top: 3.5rem; }
+  }
+  section { margin-top: 3.5rem; padding-top: 1rem; border-top: 3px solid var(--ink); scroll-margin-top: 1rem; }
+  h2 {
+    display: flex; gap: .75rem; align-items: baseline; margin: 0 0 1rem;
+    font-size: 1.375rem; line-height: 1.364;
+  }
+  h2 .num { font-size: 0.875rem; font-weight: 400; }
+  p { margin: 0 0 .75rem; }
+  dl { margin: 0; }
+  dd { margin: 0; }
+  .sources { margin-top: 1.25rem; border-top: 1px solid var(--rule); }
+  .sources div { display: grid; gap: .1rem 1.5rem; padding: .75rem 0; border-bottom: 1px solid var(--rule); }
+  @media (min-width: 40rem) { .sources div { grid-template-columns: 1fr 12rem; } }
+  .sources dt { font-weight: 600; }
+  .sources dd, .fields dt { color: var(--muted); }
+  .limits { list-style: none; margin: 0; padding: 0; counter-reset: limit; }
+  .limits li { counter-increment: limit; margin-bottom: 1rem; padding: .25rem 0 .25rem 1rem; border-left: 6px solid var(--accent); }
+  .limits li::before {
+    content: "0" counter(limit); display: block; color: var(--link);
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.8125rem;
+  }
+  .plain { list-style: none; margin: 0; padding: 0; }
+  .fields div { display: flex; flex-wrap: wrap; gap: 0 .75rem; padding: .35rem 0; }
+  .fields dt { min-width: 5rem; }
+  .fine p { font-size: 0.8125rem; line-height: 1.692; overflow-wrap: anywhere; }
+  .fine .cite { padding-left: 2.25rem; text-indent: -2.25rem; }
+  .cite .num { display: inline-block; width: 2.25rem; text-indent: 0; }
+  footer { margin-top: 4rem; padding-top: .75rem; border-top: 8px solid var(--accent); font-size: 0.8125rem; color: var(--muted); }
+  footer p span { margin-right: 1.25rem; }
+  footer a { color: inherit; margin-right: 1.25rem; }
 </style>
 </head>
 <body>
+<div class="page wide">
   <header>
     <a class="site" href="./" aria-current="page">China Capital Detection</a>
     <nav><a href="./privacy/">隱私權政策</a> <a href="./terms/">服務條款</a></nav>
   </header>
   <h1>China Capital Detection</h1>
-  <p class="meta">最後更新: 2026-10-21</p>
-  <p>本 App 以公開的官方資料，為產品標示上的廠商提供「中資背景指標」。結果是附出處的指標，並非法律或事實上的定論。</p>
-    <section>
-      <h2>本結果無法涵蓋的情形</h2>
-      <ul>
+  <p class="dateline mono">最後更新: 2026-10-21</p>
+  <p class="purpose">本 App 以公開的官方資料，為產品標示上的廠商提供「中資背景指標」。結果是附出處的指標，並非法律或事實上的定論。</p>
+  <div class="cols">
+    <nav class="toc">
+      <ol>
+        <li><a href="#sources"><span class="num mono">01</span><span>資料來源</span></a></li>
+        <li><a href="#limits"><span class="num mono">02</span><span>本結果無法涵蓋的情形</span></a></li>
+        <li><a href="#documents"><span class="num mono">03</span><span>隱私權與條款</span></a></li>
+        <li><a href="#contact"><span class="num mono">04</span><span>聯絡方式</span></a></li>
+        <li><a href="#licence"><span class="num mono">05</span><span>資料來源與授權</span></a></li>
+      </ol>
+    </nav>
+    <main>
+    <section id="sources">
+      <h2><span class="num mono">01</span><span>資料來源</span></h2>
+      <p>判斷僅根據本頁所列已公開的官方資料來源，可能存在未揭露、間接或透過第三地持股等無法涵蓋的情形。各項資料的利用授權詳見「資料來源與授權」；本結果由本 App 自行比對產生，並非資料提供機關的認定，亦不代表任何機關的建議或認可。</p>
+      <dl class="sources">
+        <div><dt><a href="https://data.gov.tw/dataset/18431">陸資來臺投資事業名錄 (data.gov.tw #18431)</a></dt><dd>經濟部</dd></div>
+        <div><dt><a href="https://data.gcis.nat.gov.tw/od/data">公司登記董監事資料（商工登記公示資料）</a></dt><dd>經濟部商業發展署</dd></div>
+        <div><dt><a href="https://data.gov.tw/dataset/9400">全國營業(稅籍)登記資料集 (data.gov.tw #9400)</a></dt><dd>財政部財政資訊中心</dd></div>
+      </dl>
+    </section>
+    <section id="limits">
+      <h2><span class="num mono">02</span><span>本結果無法涵蓋的情形</span></h2>
+      <ol class="limits">
         <li>陸資投資名錄依政府資料開放平臺標示為每年更新一次，可能未涵蓋最新變動；上層追溯則是本 App 查詢公司登記當時的結果。</li>
         <li>上層追溯依據「公司登記董監事資料」，並非完整股東名冊；透過自然人代持的股權無法由此查得。</li>
         <li>經由第三地間接投資或其他未經核准之情形，名錄可能未列入。</li>
-      </ul>
+      </ol>
     </section>
-    <section>
-      <h2>資料來源</h2>
-      <p>判斷僅根據本頁所列已公開的官方資料來源，可能存在未揭露、間接或透過第三地持股等無法涵蓋的情形。各項資料的利用授權詳見「資料來源與授權」；本結果由本 App 自行比對產生，並非資料提供機關的認定，亦不代表任何機關的建議或認可。</p>
-      <ul>
-        <li><a href="https://data.gov.tw/dataset/18431">陸資來臺投資事業名錄 (data.gov.tw #18431)</a>（經濟部）</li>
-        <li><a href="https://data.gcis.nat.gov.tw/od/data">公司登記董監事資料（商工登記公示資料）</a>（經濟部商業發展署）</li>
-        <li><a href="https://data.gov.tw/dataset/9400">全國營業(稅籍)登記資料集 (data.gov.tw #9400)</a>（財政部財政資訊中心）</li>
-      </ul>
-    </section>
-    <section>
-      <h2>資料來源與授權</h2>
-      <p>本 App 的結果依下列三項政府資料產生，均依政府資料開放授權條款利用。依該條款第三條(二)，各自的顯名聲明如下。</p>
-      <p>經濟部　〔年份：本資料集未發布版次〕　陸資來臺投資事業名錄（data.gov.tw 資料集編號 18431，資料集識別碼 313090000G-000010）<br>
-此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。<br>
-政府資料開放授權條款：https://data.gov.tw/license</p>
-      <p>經濟部商業發展署　〔年份：本資料集未發布版次，資料以查詢當時之公示登記為準〕　公司登記董監事資料（商工登記公示資料開放平臺）<br>
-此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。<br>
-政府資料開放授權條款：https://data.gov.tw/license</p>
-      <p>財政部財政資訊中心　〔年份：本資料集未發布版次〕　全國營業(稅籍)登記資料集（data.gov.tw 資料集編號 9400）<br>
-此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。<br>
-政府資料開放授權條款：https://data.gov.tw/license</p>
-      <p>公司登記董監事資料（商工登記公示資料）另依經濟部「政府網站資料開放宣告」（https://data.gcis.nat.gov.tw/main/govannounce）利用；每一筆結果均依該宣告註明出處。</p>
-    </section>
-    <section>
-      <h2>隱私權與條款</h2>
-      <ul>
+    <section id="documents">
+      <h2><span class="num mono">03</span><span>隱私權與條款</span></h2>
+      <ul class="plain">
         <li><a href="privacy/">閱讀隱私權政策</a></li>
         <li><a href="terms/">閱讀服務條款</a></li>
       </ul>
     </section>
-    <section>
-      <h2>聯絡方式</h2>
-      <p>營運者: 林孟錡</p>
-      <p>聯絡信箱: <a href="mailto:chinacapitaldetection@gmail.com">chinacapitaldetection@gmail.com</a></p>
+    <section id="contact">
+      <h2><span class="num mono">04</span><span>聯絡方式</span></h2>
+      <dl class="fields">
+        <div><dt>營運者</dt><dd>林孟錡</dd></div>
+        <div><dt>聯絡信箱</dt><dd><a href="mailto:chinacapitaldetection@gmail.com">chinacapitaldetection@gmail.com</a></dd></div>
+      </dl>
     </section>
+    <section id="licence">
+      <h2><span class="num mono">05</span><span>資料來源與授權</span></h2>
+      <div class="fine">
+      <p>本 App 的結果依下列三項政府資料產生，均依政府資料開放授權條款利用。依該條款第三條(二)，各自的顯名聲明如下。</p>
+      <p class="cite"><span class="num mono">[1]</span>經濟部　〔年份：本資料集未發布版次〕　陸資來臺投資事業名錄（data.gov.tw 資料集編號 18431，資料集識別碼 313090000G-000010）<br>
+此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。<br>
+政府資料開放授權條款：https://data.gov.tw/license</p>
+      <p class="cite"><span class="num mono">[2]</span>經濟部商業發展署　〔年份：本資料集未發布版次，資料以查詢當時之公示登記為準〕　公司登記董監事資料（商工登記公示資料開放平臺）<br>
+此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。<br>
+政府資料開放授權條款：https://data.gov.tw/license</p>
+      <p class="cite"><span class="num mono">[3]</span>財政部財政資訊中心　〔年份：本資料集未發布版次〕　全國營業(稅籍)登記資料集（data.gov.tw 資料集編號 9400）<br>
+此開放資料依政府資料開放授權條款 (Open Government Data License) 進行公眾釋出，使用者於遵守本條款各項規定之前提下，得利用之。<br>
+政府資料開放授權條款：https://data.gov.tw/license</p>
+      <p>公司登記董監事資料（商工登記公示資料）另依經濟部「政府網站資料開放宣告」（https://data.gcis.nat.gov.tw/main/govannounce）利用；每一筆結果均依該宣告註明出處。</p>
+      </div>
+    </section>
+    </main>
+  </div>
+  <footer>
+    <p><span>China Capital Detection</span> <a href="./privacy/">隱私權政策</a> <a href="./terms/">服務條款</a></p>
+  </footer>
+</div>
 </body>
 </html>
