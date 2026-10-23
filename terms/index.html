@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>服務條款 — China Capital Detection</title>
 <style>
-  :root { color-scheme: light dark; --paper: #fff8f4; --sheet: #ffffff; --ink: #211d1d; --muted: #5c514d; --link: #ad4d2a; --accent: #db6a41; --rule: #db6a4147; --shadow: #e6b881; }
-  @media (prefers-color-scheme: dark) { :root { --paper: #1b1817; --sheet: #242020; --ink: #f3ece9; --muted: #b9aca7; --link: #f0a07a; --accent: #db6a41; --rule: #db6a4159; --shadow: #6b3a26; } }
+  :root { color-scheme: light dark; --paper: #fff8f4; --sheet: #ffffff; --ink: #211d1d; --muted: #5c514d; --link: #ad4d2a; --accent: #db6a41; --rule: #db6a4147; --shadow: #e6b881; --verdict-high: #c0392b; --verdict-medium: #e67e22; --verdict-neutral: #546e7a; --on-verdict: #fff; --on-verdict-medium: #222; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #1b1817; --sheet: #242020; --ink: #f3ece9; --muted: #b9aca7; --link: #f0a07a; --accent: #db6a41; --rule: #db6a4159; --shadow: #6b3a26; --verdict-high: #f28b82; --verdict-medium: #fbbc04; --verdict-neutral: #90a4ae; --on-verdict: #121212; --on-verdict-medium: #121212; } }
   * { box-sizing: border-box; }
   body {
     margin: 0; border-top: 8px solid var(--accent); background: var(--paper); color: var(--ink);
@@ -70,6 +70,58 @@
     font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.8125rem;
   }
   .plain { list-style: none; margin: 0; padding: 0; }
+  h3 { margin: 1.5rem 0 .5rem; font-size: 0.875rem; }
+  .checks div { padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+  .checks dt { font-weight: 600; }
+  #use p, #read p { max-width: 38em; }
+  /* Issue #421: one row per step (icon | 步驟 n + text) until there is room for three columns joined by arrows. */
+  .steps { list-style: none; margin: 1.25rem 0 2rem; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 3.25rem 1fr; gap: 1rem; align-items: start; padding: .9rem 0; border-top: 1px solid var(--rule); }
+  .steps li:last-child { border-bottom: 1px solid var(--rule); }
+  .tile { display: grid; place-items: center; width: 3rem; height: 3rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--accent); }
+  .tile svg { display: block; width: 2.1rem; height: 2.1rem; color: var(--ink); }
+  .step-n { display: none; margin-left: auto; font: 900 2.25rem/1 "Songti TC", "Noto Serif CJK TC", "Noto Serif TC", "Source Han Serif TC", PMingLiU, serif; color: var(--accent); }
+  .step-k { display: block; margin-bottom: .15rem; font-size: 0.8125rem; font-weight: 700; letter-spacing: .05em; color: var(--link); }
+  .step-txt p { margin: 0; }
+  @media (min-width: 60rem) {
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+    .steps li, .steps li:last-child { display: block; position: relative; padding: 0; border: 0; }
+    .step-head { display: flex; align-items: center; gap: .9rem; padding-bottom: .9rem; margin-bottom: .9rem; border-bottom: 3px solid var(--ink); }
+    .step-n { display: block; } .step-k { display: none; }
+    .tile { width: 4.25rem; height: 4.25rem; box-shadow: 4px 4px 0 var(--accent); } .tile svg { width: 3.1rem; height: 3.1rem; }
+    .steps li:not(:last-child)::after { content: ""; position: absolute; top: calc(2.125rem + 2px); right: -2rem; width: 1.5rem; height: 2px; background: var(--ink); }
+    .steps li:not(:last-child)::before { content: ""; position: absolute; top: calc(2.125rem - 3px); right: -2.1rem; border-left: 8px solid var(--ink); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+  }
+  /* The worked example: one framed sheet, its label marked ①②③ on the party lines, one card per party. */
+  .example { margin: 0 0 2rem; padding: 1.1rem 1rem 1.25rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--accent); }
+  @media (min-width: 40rem) { .example { padding: 1.5rem 1.75rem 1.75rem; } }
+  .example h3 { margin: 0 0 .35rem; }
+  .example .note { margin: 0 0 1rem; font-size: 0.875rem; color: var(--muted); }
+  .mark { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; flex: none; border-radius: 50%; background: var(--accent); color: #fff; font: 700 .85rem/1 system-ui, sans-serif; }
+  figure { margin: 1rem 0 1.25rem; max-width: 30rem; }
+  figcaption { margin-top: .4rem; font-size: 0.875rem; color: var(--muted); }
+  .label { position: relative; padding-left: 2rem; }
+  .label > .mark { position: absolute; left: 0; top: var(--y); transform: translateY(-50%); }
+  /* store-label.png is 1100×782 with a blank band under its border (rows 738–781): the frame stops at 738. */
+  .crop { box-sizing: content-box; position: relative; overflow: hidden; aspect-ratio: 1100 / 738; border: 2px solid var(--ink); background: #fff; }
+  .crop img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: auto; }
+  /* A phone shows only the party lines (x 12–812, y 267–540: clear of the 成分 and 消費者 lines), enlarged. */
+  @media (max-width: 39.99rem) {
+    .crop { aspect-ratio: 800 / 273; }
+    .crop img { width: 137.5%; left: -1.5%; top: -97.8%; }
+    .label > .mark { top: var(--y-crop); }
+  }
+  .parties { list-style: none; margin: 0; padding: 0; }
+  .parties li { display: grid; grid-template-columns: 1.5rem 1fr; gap: .75rem; padding: .9rem 0; border-top: 1px solid var(--rule); }
+  .parties li > .mark { margin-top: .1rem; }
+  .parties p { margin: 0; }
+  .who { font-weight: 600; }
+  .role { margin-right: .35rem; font-size: 0.875rem; font-weight: 400; color: var(--link); }
+  .parties p.verdict { margin: .4rem 0 .35rem; }
+  .pill { display: inline-block; padding: .15rem .6rem; border-radius: 999px; font-size: 0.875rem; font-weight: 700; white-space: nowrap; color: var(--on-verdict); }
+  .pill-T1 { background: var(--verdict-high); }
+  .pill-T2 { background: var(--verdict-medium); color: var(--on-verdict-medium); }
+  .pill-none { background: var(--verdict-neutral); }
   .fields div { display: flex; flex-wrap: wrap; gap: 0 .75rem; padding: .35rem 0; }
   .fields dt { min-width: 5rem; }
   .fine p { font-size: 0.8125rem; line-height: 1.692; overflow-wrap: anywhere; }
