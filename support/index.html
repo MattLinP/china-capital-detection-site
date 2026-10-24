@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>支持中資查詢 — 中資查詢</title>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<style>
+  :root { color-scheme: light dark; --paper: #fff8f4; --sheet: #ffffff; --ink: #211d1d; --muted: #5c514d; --link: #ad4d2a; --accent: #db6a41; --rule: #db6a4147; --shadow: #e6b881; --verdict-high: #c0392b; --verdict-medium: #e67e22; --verdict-neutral: #546e7a; --on-verdict: #fff; --on-verdict-medium: #222; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #1b1817; --sheet: #242020; --ink: #f3ece9; --muted: #b9aca7; --link: #f0a07a; --accent: #db6a41; --rule: #db6a4159; --shadow: #6b3a26; --verdict-high: #f28b82; --verdict-medium: #fbbc04; --verdict-neutral: #90a4ae; --on-verdict: #121212; --on-verdict-medium: #121212; } }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; border-top: 8px solid var(--accent); background: var(--paper); color: var(--ink);
+    font-family: "PingFang TC", "Noto Sans CJK TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    font-size: 0.9375rem; line-height: 1.733;
+  }
+  a { color: var(--link); text-underline-offset: .2em; }
+  h1, h2 { font-family: "Songti TC", "Noto Serif CJK TC", "Noto Serif TC", "Source Han Serif TC", PMingLiU, serif; }
+  .mono { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .page { max-width: 46rem; margin: 0 auto; padding: 0 1rem 3rem; }
+  .page.wide { max-width: 68rem; }
+  @media (min-width: 48rem) { .page { padding-inline: 2rem; } }
+  header {
+    display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem 1rem;
+    padding: 1rem 0 .75rem; font-size: 0.875rem;
+  }
+  header a { color: var(--ink); text-decoration: none; }
+  header a:hover { text-decoration: underline; }
+  .site { font-weight: 700; }
+  header nav { display: flex; gap: 1.25rem; }
+  h1 {
+    margin: 2rem 0 0; font-weight: 900; letter-spacing: -.02em;
+    font-size: clamp(2rem, 7vw, 3rem);
+    line-height: 1.125;
+  }
+  .dateline { margin: 1rem 0 0; padding: .4rem 0; border-block: 1px solid var(--ink); font-size: 0.8125rem; }
+  .purpose {
+    margin: 2rem 0 0; padding: 1.25rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--shadow);
+    font-size: clamp(1.0625rem, 2.6vw, 1.25rem);
+    line-height: 1.700;
+  }
+  .intro { margin-top: 2rem; }
+  .toc { margin-top: 2.5rem; }
+  .toc ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .toc li { border-bottom: 1px solid var(--rule); }
+  .toc a { display: flex; gap: 1rem; padding: .55rem 0; color: var(--ink); text-decoration: none; }
+  .toc a:hover span:last-child { text-decoration: underline; }
+  .num { color: var(--link); }
+  @media (min-width: 60rem) {
+    .cols { display: grid; grid-template-columns: 14rem minmax(0, 44rem); gap: 3rem; }
+    .toc { position: sticky; top: 1rem; align-self: start; margin-top: 3.5rem; }
+  }
+  section { margin-top: 3.5rem; padding-top: 1rem; border-top: 3px solid var(--ink); scroll-margin-top: 1rem; }
+  h2 {
+    display: flex; gap: .75rem; align-items: baseline; margin: 0 0 1rem;
+    font-size: 1.375rem; line-height: 1.364;
+  }
+  h2 .num { font-size: 0.875rem; font-weight: 400; }
+  p { margin: 0 0 .75rem; }
+  dl { margin: 0; }
+  dd { margin: 0; }
+  .sources { margin-top: 1.25rem; border-top: 1px solid var(--rule); }
+  .sources div { display: grid; gap: .1rem 1.5rem; padding: .75rem 0; border-bottom: 1px solid var(--rule); }
+  @media (min-width: 40rem) { .sources div { grid-template-columns: 1fr 12rem; } }
+  .sources dt { font-weight: 600; }
+  .sources dd, .fields dt { color: var(--muted); }
+  .limits { list-style: none; margin: 0; padding: 0; counter-reset: limit; }
+  .limits li { counter-increment: limit; margin-bottom: 1rem; padding: .25rem 0 .25rem 1rem; border-left: 6px solid var(--accent); }
+  .limits li::before {
+    content: "0" counter(limit); display: block; color: var(--link);
+    font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.8125rem;
+  }
+  .plain { list-style: none; margin: 0; padding: 0; }
+  h3 { margin: 1.5rem 0 .5rem; font-size: 0.875rem; }
+  .checks div { padding: .5rem 0; border-bottom: 1px solid var(--rule); }
+  .checks dt { font-weight: 600; }
+  #use p, #read p { max-width: 38em; }
+  /* Issue #421: one row per step (icon | 步驟 n + text) until there is room for three columns joined by arrows. */
+  .steps { list-style: none; margin: 1.25rem 0 2rem; padding: 0; }
+  .steps li { display: grid; grid-template-columns: 3.25rem 1fr; gap: 1rem; align-items: start; padding: .9rem 0; border-top: 1px solid var(--rule); }
+  .steps li:last-child { border-bottom: 1px solid var(--rule); }
+  .tile { display: grid; place-items: center; width: 3rem; height: 3rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--accent); }
+  .tile svg { display: block; width: 2.1rem; height: 2.1rem; color: var(--ink); }
+  .step-n { display: none; margin-left: auto; font: 900 2.25rem/1 "Songti TC", "Noto Serif CJK TC", "Noto Serif TC", "Source Han Serif TC", PMingLiU, serif; color: var(--accent); }
+  .step-k { display: block; margin-bottom: .15rem; font-size: 0.8125rem; font-weight: 700; letter-spacing: .05em; color: var(--link); }
+  .step-txt p { margin: 0; }
+  @media (min-width: 60rem) {
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; }
+    .steps li, .steps li:last-child { display: block; position: relative; padding: 0; border: 0; }
+    .step-head { display: flex; align-items: center; gap: .9rem; padding-bottom: .9rem; margin-bottom: .9rem; border-bottom: 3px solid var(--ink); }
+    .step-n { display: block; } .step-k { display: none; }
+    .tile { width: 4.25rem; height: 4.25rem; box-shadow: 4px 4px 0 var(--accent); } .tile svg { width: 3.1rem; height: 3.1rem; }
+    .steps li:not(:last-child)::after { content: ""; position: absolute; top: calc(2.125rem + 2px); right: -2rem; width: 1.5rem; height: 2px; background: var(--ink); }
+    .steps li:not(:last-child)::before { content: ""; position: absolute; top: calc(2.125rem - 3px); right: -2.1rem; border-left: 8px solid var(--ink); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+  }
+  /* The worked example: one framed sheet, its label marked ①②③ on the party lines, one card per party. */
+  .example { margin: 0 0 2rem; padding: 1.1rem 1rem 1.25rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 5px 5px 0 var(--accent); }
+  @media (min-width: 40rem) { .example { padding: 1.5rem 1.75rem 1.75rem; } }
+  .example h3 { margin: 0 0 .35rem; }
+  .example .note { margin: 0 0 1rem; font-size: 0.875rem; color: var(--muted); }
+  .mark { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; flex: none; border-radius: 50%; background: var(--accent); color: #fff; font: 700 .85rem/1 system-ui, sans-serif; }
+  figure { margin: 1rem 0 1.25rem; max-width: 30rem; }
+  figcaption { margin-top: .4rem; font-size: 0.875rem; color: var(--muted); }
+  .label { position: relative; padding-left: 2rem; }
+  .label > .mark { position: absolute; left: 0; top: var(--y); transform: translateY(-50%); }
+  /* store-label.png is 1100×782 with a blank band under its border (rows 738–781): the frame stops at 738. */
+  .crop { box-sizing: content-box; position: relative; overflow: hidden; aspect-ratio: 1100 / 738; border: 2px solid var(--ink); background: #fff; }
+  .crop img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: auto; }
+  /* A phone shows only the party lines (x 12–812, y 267–540: clear of the 成分 and 消費者 lines), enlarged. */
+  @media (max-width: 39.99rem) {
+    .crop { aspect-ratio: 800 / 273; }
+    .crop img { width: 137.5%; left: -1.5%; top: -97.8%; }
+    .label > .mark { top: var(--y-crop); }
+  }
+  .parties { list-style: none; margin: 0; padding: 0; }
+  .parties li { display: grid; grid-template-columns: 1.5rem 1fr; gap: .75rem; padding: .9rem 0; border-top: 1px solid var(--rule); }
+  .parties li > .mark { margin-top: .1rem; }
+  .parties p { margin: 0; }
+  .who { font-weight: 600; }
+  .role { margin-right: .35rem; font-size: 0.875rem; font-weight: 400; color: var(--link); }
+  .parties p.verdict { margin: .4rem 0 .35rem; }
+  .pill { display: inline-block; padding: .15rem .6rem; border-radius: 999px; font-size: 0.875rem; font-weight: 700; white-space: nowrap; color: var(--on-verdict); }
+  .pill-T1 { background: var(--verdict-high); }
+  .pill-T2 { background: var(--verdict-medium); color: var(--on-verdict-medium); }
+  .pill-none { background: var(--verdict-neutral); }
+  .fields div { display: flex; flex-wrap: wrap; gap: 0 .75rem; padding: .35rem 0; }
+  .fields dt { min-width: 5rem; }
+  .fine p { font-size: 0.8125rem; line-height: 1.692; overflow-wrap: anywhere; }
+  .fine .cite { padding-left: 2.25rem; text-indent: -2.25rem; }
+  .cite .num { display: inline-block; width: 2.25rem; text-indent: 0; }
+  /* Issue #389: the tip page — one sheet that asks, a pull quote, the §8 notice in fine print. */
+  .ask { margin: 2rem 0; padding: 1.5rem; background: var(--sheet); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--accent); }
+  .ask-amt { display: flex; flex-direction: column; gap: .2rem; padding-bottom: .9rem; margin-bottom: .9rem; border-bottom: 3px solid var(--ink); }
+  .ask-k { font-size: 0.8125rem; letter-spacing: .05em; font-weight: 700; color: var(--link); }
+  .ask-v { font: 900 1.6rem/1.3 "Songti TC", "Noto Serif CJK TC", "Noto Serif TC", "Source Han Serif TC", PMingLiU, serif; }
+  .btn { display: inline-block; margin: .5rem 0 .75rem; padding: .7rem 1.4rem; background: var(--accent); color: #fff; font-weight: 700; text-decoration: none; border: 2px solid var(--ink); }
+  .btn-off { background: var(--rule); color: var(--muted); border-style: dashed; }
+  .ask .note { color: var(--muted); }
+  .pull { margin: 2.5rem 0; padding: .25rem 0 .25rem 1.25rem; border-left: 6px solid var(--accent); font-size: 1.0625rem; line-height: 1.700; }
+  .notice { margin-top: 2.5rem; padding-top: .75rem; border-top: 1px solid var(--rule); font-size: 0.8125rem; line-height: 1.692; color: var(--muted); }
+  .notice h2 { flex-wrap: wrap; gap: .25rem .6rem; margin: 0 0 .4rem; font-family: inherit; font-size: 0.875rem; line-height: 1.364; color: var(--ink); }
+  .notice h2 span { font: 400 0.8125rem/1 ui-monospace, Menlo, Consolas, monospace; color: var(--muted); }
+  .notice p { margin: 0 0 .5rem; }
+  .notice ol { list-style: none; margin: 0; padding: 0; }
+  .notice li { display: grid; grid-template-columns: 2.2rem 1fr; margin-bottom: .35rem; break-inside: avoid; }
+  .notice li .num { white-space: nowrap; }
+  @media (min-width: 60rem) { .notice ol { columns: 2; column-gap: 2.5rem; } }
+  footer { margin-top: 3rem; padding-top: .9rem; border-top: 1px solid var(--rule); font-size: 0.8125rem; color: var(--muted); }
+  footer p { margin: 0 0 .3rem; }
+  footer a { color: var(--ink); }
+  footer .fs { font-weight: 700; text-decoration: none; }
+  footer .m { display: flex; flex-wrap: wrap; gap: .15rem 1.25rem; }
+  footer .m a { color: var(--muted); }
+  footer .dot { margin: 0 .5rem; color: var(--rule); }
+</style>
+</head>
+<body>
+<div class="page wide">
+  <header>
+    <a class="site" href="../">中資查詢</a>
+    <nav><a href="../privacy/">隱私權政策</a> <a href="../terms/">服務條款</a></nav>
+  </header>
+  <h1>支持中資查詢</h1>
+  <p class="purpose">中資查詢是非官方的查詢工具，需要長期投入時間開發與維護。如果這個工具對您有幫助，歡迎贊助支持。</p>
+  <div class="ask">
+    <p class="ask-amt"><span class="ask-k">贊助金額</span><span class="ask-v">新台幣 50 元起，金額由您自訂。</span></p>
+    <p>贊助內容：支持中資查詢的持續開發與維護。贊助款不指定特定用途。</p>
+    <span class="btn btn-off">前往付款頁面（申請中）</span>
+    <p class="note">收款服務目前申請中，開通後會在本頁提供付款連結。付款透過綠界科技（ECPay）進行，可使用信用卡、ATM 轉帳或超商代碼。</p>
+  </div>
+  <blockquote class="pull">不接受公司贊助；贊助不影響任何結果。贊助不影響任何查詢結果，亦不接受任何人就特定公司之結果提出對價。</blockquote>
+  <section class="notice">
+    <h2>個人資料告知<span>個人資料保護法第 8 條</span></h2>
+    <p>贊助的付款資料由綠界科技股份有限公司蒐集與處理，適用其隱私權政策。依個人資料保護法第 8 條，營運者告知如下。</p>
+    <ol>
+      <li><span class="num">（一）</span><span>目的：贊助款項的收款與對帳。</span></li>
+      <li><span class="num">（二）</span><span>營運者可能從綠界取得的資料：您填寫的暱稱與留言、贊助金額、付款方式；以信用卡付款時，另有卡號前六碼與末四碼、發卡銀行，以及綠界為 3D 驗證（3DS 2.0）蒐集的持卡人英文姓名、手機號碼與電子郵件，這些資料可能顯示在營運者的綠界後台。</span></li>
+      <li><span class="num">（三）</span><span>以 ATM 轉帳時，您的銀行顯示的收款戶名預期為綠界或其代收帳戶的名稱，不是營運者的姓名。</span></li>
+      <li><span class="num">（四）</span><span>期間、地區、對象與方式：上述資料保存在綠界，期間依綠界平台規定與稅務需要；營運者只在綠界後台檢視，用於對帳與申報所得，不另外複製、儲存或提供給他人。</span></li>
+      <li><span class="num">（五）</span><span>您可以依個人資料保護法第 3 條，請求查詢、閱覽、製給複本、補充或更正、停止蒐集處理利用或刪除，請寫信到下方的聯絡信箱；綠界保存的資料，也可以依綠界的規定向綠界請求。</span></li>
+      <li><span class="num">（六）</span><span>是否贊助由您自由決定；不提供付款資料就無法完成贊助，但不影響您使用中資查詢。</span></li>
+    </ol>
+  </section>
+  <footer>
+    <p><a class="fs" href="../">中資查詢</a><span class="dot">·</span><a href="../privacy/">隱私權政策</a><span class="dot">·</span><a href="../terms/">服務條款</a></p>
+    <p class="m"><span>營運者 林孟錡</span><span><a href="mailto:chinacapitaldetection@gmail.com">chinacapitaldetection@gmail.com</a></span><span>最後更新 <span class="mono">2026-10-24</span></span></p>
+  </footer>
+</div>
+</body>
+</html>
